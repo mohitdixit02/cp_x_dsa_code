@@ -96,3 +96,67 @@ int inversionCount(vector<int> &arr)
     int n = arr.size();
     return mergeSort(arr, 0, n - 1);
 }
+
+
+// ********* Direct ****************
+int mergeSort(vector<int>&arr, int l, int r){
+    if(l >= r) return 0;
+    int m = l + (r - l)/2;
+
+    int count = 0;
+    count += mergeSort(arr, l, m); // C1
+    count += mergeSort(arr, m + 1, r); // C2
+
+    count += solveCrossPair(arr, l, m, r); // C3
+    merge(arr, l, m, r);
+
+    return count;
+}
+
+int solveCrossPair(vector<int>&arr, int l, int m, int r){
+    int count = 0;
+    int lp = l;
+    int rp = m + 1;
+    while(lp <= m && rp <= r){
+        if(arr[lp] > arr[rp]){
+            count += (m - lp + 1);
+            rp++;
+        }
+        else lp++;
+    }
+    return count;
+}
+
+void merge(vector<int>&arr, int l, int m, int r){
+    int lp = l;
+    int rp = m + 1;
+
+    vector<int> t;
+    while(lp <= m && rp <= r){
+        if(arr[lp] <= arr[rp]){
+            t.emplace_back(arr[lp]);
+            lp++;
+        }
+        else{
+            t.emplace_back(arr[rp]);
+            rp++;
+        }
+    }
+    while(lp <= m){
+        t.emplace_back(arr[lp]);
+        lp++;
+    }
+    while(rp <= r){
+        t.emplace_back(arr[rp]);
+        rp++;
+    }
+    for(int i = l; i <= r; i++){
+        arr[i] = t[i - l];
+    }
+}
+
+int inversionCount(vector<int> &arr)
+{
+    int n = arr.size();
+    return mergeSort(arr, 0, n - 1);
+}
