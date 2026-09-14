@@ -25,3 +25,8 @@ int main(){
     for(auto i : res) cout << i << " ";
     return 0;
 }
+
+// Coordinates Compression for vector - Using Lower bound
+auto getIdx = [&](long long x) {
+    return lower_bound(val.begin(), val.end(), x) - val.begin();
+};
